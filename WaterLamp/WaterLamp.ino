@@ -83,6 +83,9 @@ void setup() {
   pinMode(LED_G_PIN, OUTPUT);
   pinMode(LED_B_PIN, OUTPUT);
   pinMode(WATER_PUMP_PIN, OUTPUT);
+
+  lightsOn = true;
+  setColor(127, 127, 127);
 }
 void calcDeltaMillis() {
   deltaMillis = millis() - lastMillis;
@@ -175,25 +178,25 @@ void computeMessage() {
     // Serial.println(substrings[i]);
     if (isDigit(substrings[i])) {
       intInputs[i] = substrings[i].toInt();
-      Serial.println(intInputs[i]);
+      // Serial.println(intInputs[i]);
     } else {
       Serial.print("Not a number: ");
-      Serial.println(substrings[i]);
+      // Serial.println(substrings[i]);
     }
   }
 
   if (substringCount < 1) {
-    Serial.println("substringCount < 2;");
+    // Serial.println("substringCount < 2;");
     return;
   }
 
   int command = intInputs[0];
-  Serial.print(command);
-  Serial.print(" : ");
-  Serial.println(GET_STATE);
+  // Serial.print(command);
+  // Serial.print(" : ");
+  // Serial.println(GET_STATE);
   if (command == SET_LIGHT) {
     if (substringCount != 2) return;
-    setLight(intInputs[1]);f
+    setLight(intInputs[1]);
     Serial.println("Set Light");
   } else if (command == SET_COLOR_MODE) {
     if (substringCount != 2) return;
@@ -293,6 +296,9 @@ void setColorMode(int mode) {
 
 void setLight(bool state) {
   lightsOn = state;
+  if(currColorMode == COLOR_MODE_RAINBOW){
+    currColorMode = COLOR_MODE_STATIC;
+  }
   if (lightsOn) {
     analogWrite(LED_R_PIN, red);
     analogWrite(LED_G_PIN, green);
